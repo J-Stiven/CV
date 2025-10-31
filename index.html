@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CV - Jaider Stiven Molina Trujillo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.net.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f8fafc;
+            --accent-color: #0ea5e9; /* azul profesional */
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-accent: #0ea5e9;
+            --bg-light: #f1f5f9;
+            --bg-white: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --border-color: #e2e8f0;
+            --vanta-color: 0x0ea5e9;
+            --vanta-bg: 0xf8fafc;
+            --skill-bar-bg: #cbd5e1;
+            --tag-bg: #e0f2fe;
+            --tag-text: #0369a1;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --footer-bg: #f1f5f9;
+            --footer-text: #475569;
+            --footer-border: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #00d4ff;
+            --text-primary: #e0e7ff;
+            --text-secondary: #94a3b8;
+            --text-accent: #00d4ff;
+            --bg-light: #0f172a;
+            --bg-white: #1e293b;
+            --bg-card: rgba(255, 255, 255, 0.1);
+            --border-color: #334155;
+            --vanta-color: 0x00d4ff;
+            --vanta-bg: 0x0f172a;
+            --skill-bar-bg: #334155;
+            --tag-bg: #164e63;
+            --tag-text: #a5f3fc;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --footer-bg: #1e293b;
+            --footer-text: #94a3b8;
+            --footer-border: #334155;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-light);
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            position: relative;
+            overflow: hidden;
+            transition: background 0.4s ease;
+        }
+        
+        .vanta-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.7;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border: 4px solid rgba(14, 165, 233, 0.3);
+            box-shadow: 0 10px 20px var(--shadow-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            border: 2px solid var(--bg-white);
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 1rem;
+            width: 2px;
+            height: calc(100% - 0.5rem);
+            background: linear-gradient(to bottom, var(--accent-color), transparent);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .skill-bar {
+            height: 6px;
+            background: var(--skill-bar-bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), #0284c7);
+            border-radius: 3px;
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .card-hover {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease, background 0.4s ease, border-color 0.4s ease;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.15);
+            border-color: var(--accent-color);
+        }
+        
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+            margin: 2rem 0;
+        }
+        
+        .text-accent {
+            color: var(--text-accent);
+        }
+        
+        .text-secondary {
+            color: var(--text-secondary);
+        }
+        
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+        }
+
+        .cv-footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 1.5rem 1rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--footer-border);
+            font-size: 0.875rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .cv-footer p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 640px) {
+            .cv-footer {
+                padding: 1rem 0.75rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 10pt !important;
+            }
+            .hero-section, .card-hover {
+                background: white !important;
+                color: black !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            .no-print, .vanta-canvas, #theme-toggle, #download-pdf {
+                display: none !important;
+            }
+            .skill-progress {
+                background: #0ea5e9 !important;
+            }
+            a {
+                color: #0ea5e9;
+                text-decoration: underline;
+            }
+            .hero-section {
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+            .profile-image {
+                width: 100px !important;
+                height: 100px !important;
+            }
+            h1 {
+                font-size: 24pt !important;
+            }
+            h2 {
+                font-size: 14pt !important;
+            }
+            h3 {
+                font-size: 12pt !important;
+            }
+            p, span {
+                font-size: 10pt !important;
+            }
+            .py-16 {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+            .py-12 {
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+            }
+            .p-8 {
+                padding: 0.5rem !important;
+            }
+            .space-y-8 {
+                margin-top: 0.25rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            .mb-12, .mt-12, .mb-8, .mb-6, .mb-4, .mb-3, .mb-2 {
+                margin-bottom: 0.25rem !important;
+            }
+            .gap-8, .gap-6, .gap-4, .gap-3, .gap-2 {
+                gap: 0.25rem !important;
+            }
+            .section-divider {
+                display: none !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            .cv-footer {
+                display: none !important;
+            }
+        }
+        
+        .animate-fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        /* Botones */
+        .btn-theme, .btn-pdf {
+            position: fixed;
+            bottom: 20px;
+            z-index: 1000;
+            padding: 8px 12px;
+            border-radius: 50px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme { right: 80px; }
+        .btn-pdf { right: 20px; }
+
+        .btn-theme:hover, .btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Hero Section -->
+    <section class="hero-section py-8 relative">
+        <div id="vanta-bg" class="vanta-canvas"></div>
+        <div class="hero-content container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-2/3 text-center md:text-left mb-4 md:mb-0">
+                    <h1 class="font-serif text-4xl md:text-5xl font-bold mb-2 animate-fade-in">
+                        Jaider Stiven Molina Trujillo
+                    </h1>
+                    <p class="text-xl text-accent mb-3 animate-fade-in stagger-1">
+                        Analista y Desarrollador de Software
+                    </p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-3 text-xs animate-fade-in stagger-2">
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-envelope"></i>
+                            jstiven.mt04@gmail.com
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-phone"></i>
+                            +57 321 960 1621
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Neiva-Huila, Colombia
+                        </span>
+                    </div>
+                </div>
+                <div class="animate-fade-in stagger-3">
+                    <img src="I.png" alt="Jaider Stiven Molina Trujillo" class="profile-image rounded-full object-cover mx-auto"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Professional Summary -->
+        <section class="mb-8 animate-fade-in">
+            <div class="rounded-lg shadow-md p-6 card-hover">
+                <p class="text-secondary text-base leading-relaxed flex items-start gap-2">
+                    <i class="fas fa-user-circle text-accent mt-1"></i>
+                    <span>
+                        Soy una persona proactiva, excelente compañero de equipo, organizado y responsable. Disfruto mucho aprender cosas nuevas, por lo que mi objetivo es un puesto desafiante y dinámico donde poder compartir mi experiencia y a su vez sumar nuevos conocimientos.
+                    </span>
+                </p>
+            </div>
+        </section>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Left Column: Experience, Education, Projects -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Experience -->
+                <section class="animate-fade-in stagger-1">
+                    <div class="rounded-lg shadow-md p-6 card-hover">
+                        <h2 class="font-serif text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-briefcase text-accent"></i>
+                            Experiencia Profesional
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div class="timeline-item">
+                                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-1">
+                                    <h3 class="font-serif text-lg font-semibold">
+                                        Analista, Desarrollador y Colaborador Multidisciplinario
+                                    </h3>
+                                    <span class="text-accent text-sm font-medium">2025 - 2026</span>
+                                </div>
+                                <p class="font-medium mb-1 text-secondary">Sena Agroindustrial la Angostura, Huila</p>
+                                <p class="text-sm text-secondary mb-2">
+                                   Participo activamente en la optimización de los procesos internos de la institución, desarrollando e implementando soluciones de software a medida que mejoran la eficiencia administrativa y operativa. Además, desempeño funciones complementarias en áreas administrativas, de archivo y soporte logístico, contribuyendo al cumplimiento de metas institucionales y al fortalecimiento de la gestión tecnológica.
+                                </p>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="px-2 py-1 tag rounded-full text-xs">Microsoft365</span>
+                                    <span class="px-2 py-1 tag rounded-full text-xs">Power Automate</span>
+                                    <span class="px-2 py-1 tag rounded-full text-xs">Laravel</span>
+                                    <span class="px-2 py-1 tag rounded-full text-xs">PHP</span>
+                                    <span class="px-2 py-1 tag rounded-full text-xs">MySQL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Education -->
+                <section class="animate-fade-in stagger-2">
+                    <div class="rounded-lg shadow-md p-6 card-hover">
+                        <h2 class="font-serif text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-graduation-cap text-accent"></i>
+                            Educación
+                        </h2>
+                        
+                        <div class="space-y-3">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-serif text-lg font-semibold">
+                                        Tecnólogo en Análisis y Desarrollo de Software
+                                    </h3>
+                                    <p class="text-secondary text-sm">Sena Agroindustrial la Angostura, Huila</p>
+                                </div>
+                                <span class="text-accent text-sm font-medium mt-1 md:mt-0">Etapa Productiva</span>
+                            </div>
+                            
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h3 class="font-serif text-lg font-semibold">
+                                        Bachiller Académico
+                                    </h3>
+                                    <p class="text-secondary text-sm">Institución Educativa Atanasio Girardot</p>
+                                </div>
+                                <span class="text-accent text-sm font-medium mt-1 md:mt-0">2022</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Projects (ahora en columna izquierda) -->
+                <section class="mt-6 animate-fade-in stagger-3">
+                    <div class="rounded-lg shadow-md p-6 card-hover">
+                        <h2 class="font-serif text-2xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-project-diagram text-accent"></i>
+                            Proyectos Destacados
+                        </h2>
+                        
+                        <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-5">
+                            <a href="" class="block hover:opacity-90 transition-opacity">
+                                <div class="border-l-4 border-accent pl-4">
+                                    <h3 class="font-serif text-lg font-semibold mb-1">
+                                        D'Jenny - tienda en línea
+                                    </h3>
+                                    <p class="text-sm text-secondary mb-2">
+                                        Participé en el desarrollo colaborativo de un sistema web para la gestión integral de ventas e inventarios de un supermercado. Me enfoqué en el análisis de requerimientos, la lógica de funcionamiento y la creación de una interfaz moderna e intuitiva.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-2 py-1 tag rounded text-xs">Laravel 8</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">PHP 8.1</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">Laragon</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">HTML</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">CSS</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">JavaScript</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="https://sicefa.com.co/" target="_blank" class="block hover:opacity-90 transition-opacity">
+                                <div class="border-l-4 border-accent pl-4">
+                                    <h3 class="font-serif text-lg font-semibold mb-1">
+                                        Trimestralización y Automatización de Reportes
+                                    </h3>
+                                    <p class="text-sm text-secondary mb-2">
+                                        Sistema de descarga automatizada de reportes desde Sofía Plus usando Power Automate. Incluye almacenamiento, análisis de datos y rediseño del módulo SIGAC en SICEFA para mejorar la gestión académica.
+                                    </p>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-2 py-1 tag rounded text-xs">Laravel 8</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">PHP 8.1</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">Microsoft365</span>
+                                        <span class="px-2 py-1 tag rounded text-xs">Power Automate</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Skills, Languages, Certifications -->
+            <div class="space-y-6">
+                <!-- Skills -->
+                <section class="animate-fade-in stagger-3">
+                    <div class="rounded-lg shadow-md p-6 card-hover">
+                        <h2 class="font-serif text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-code text-accent"></i>
+                            Habilidades Técnicas
+                        </h2>
+                        
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between mb-1 text-sm">
+                                    <span class="font-medium">JavaScript/TypeScript</span>
+                                    <span class="text-secondary">75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1 text-sm">
+                                    <span class="font-medium">Laravel</span>
+                                    <span class="text-secondary">70%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1 text-sm">
+                                    <span class="font-medium">Filament</span>
+                                    <span class="text-secondary">60%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1 text-sm">
+                                    <span class="font-medium">HTML</span>
+                                    <span class="text-secondary">88%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 88%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1 text-sm">
+                                    <span class="font-medium">PHP</span>
+                                    <span class="text-secondary">75%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 75%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between mb-1 text-sm">
+                                    <span class="font-medium">Power Automate</span>
+                                    <span class="text-secondary">66%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-progress" style="width: 66%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Languages -->
+                <section class="animate-fade-in stagger-4">
+                    <div class="rounded-lg shadow-md p-6 card-hover">
+                        <h2 class="font-serif text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-globe text-accent"></i>
+                            Idiomas
+                        </h2>
+                        
+                        <div class="space-y-2 text-sm">
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium">Español</span>
+                                <span class="text-accent font-medium">Nativo</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium">Inglés</span>
+                                <span class="text-accent font-medium">Intermedio (B2)</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="font-medium">Portugués</span>
+                                <span class="text-accent font-medium">Intermedio</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Certifications -->
+                <section class="animate-fade-in stagger-4">
+                    <div class="rounded-lg shadow-md p-6 card-hover">
+                        <h2 class="font-serif text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-certificate text-accent"></i>
+                            Certificaciones
+                        </h2>
+                        
+                        <div class="space-y-2 text-sm">
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Pruebas de Software - Testing</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Autogestión del Ser Humano</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Páginas Web con PHP y MySQL</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Variables y Estructuras en Python</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Metodologías de Investigación</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Modelado con UML</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-xs leading-tight">Curso Especial en Mantenimiento de Computadores</h3>
+                                <p class="text-xs text-secondary">Sena</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Contact & Social -->
+        <section class="mt-8 animate-fade-in">
+            <div class="rounded-lg shadow-md p-6 card-hover">
+                <h2 class="font-serif text-2xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-address-book text-accent"></i>
+                    Información de Contacto
+                </h2>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-envelope text-xl text-accent"></i>
+                        <div>
+                            <h3 class="font-semibold">Email</h3>
+                            <p>jstiven.mt04@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-phone text-xl text-accent"></i>
+                        <div>
+                            <h3 class="font-semibold">Teléfono</h3>
+                            <p>+57 321 960 1621</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <i class="fab fa-github text-xl text-accent"></i>
+                        <div>
+                            <h3 class="font-semibold">GitHub</h3>
+                            <p>github.com/J-Stiven</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Botones flotantes -->       
+        <!--<button id="download-pdf" class="btn-pdf no-print" title="Descargar PDF">
+            <i class="fas fa-download"></i>
+        </button> -->
+        <button id="theme-toggle" class="btn-theme no-print" title="Cambiar tema">
+            <i class="fas fa-sun"></i>
+        </button>
+    </main>
+
+    <!-- Footer Mejorado -->
+    <footer class="cv-footer">
+        <div class="container mx-auto px-4 text-center">
+            <p>
+                © Todos los Derechos Reservados 2025 - Jaider Stiven Molina Trujillo
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script para html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Script: VANTA.NET + Animaciones -->
+    <script>
+        let vantaEffect = null;
+
+        // Inicializar Vanta
+        function initVanta() {
+            if (vantaEffect) vantaEffect.destroy();
+
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            const color = isLight ? 0x0ea5e9 : 0x00d4ff;
+            const bg = isLight ? 0xf8fafc : 0x0f172a;
+
+            vantaEffect = VANTA.NET({
+                el: "#vanta-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: color,
+                backgroundColor: bg,
+                points: 10.00,
+                maxDistance: 20.00,
+                spacing: 14.00,
+                showDots: true
+            });
+        }
+
+        // Animar barras de habilidades
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.skill-progress').forEach(bar => {
+                        const width = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => bar.style.width = width, 100);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const skillsSection = document.querySelector('.skill-progress')?.closest('section');
+        if (skillsSection) observer.observe(skillsSection);
+
+        // Cambiar tema
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            const newTheme = isLight ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+
+            const icon = document.querySelector('#theme-toggle i');
+            icon.classList.toggle('fa-sun', isLight);
+            icon.classList.toggle('fa-moon', !isLight);
+
+            initVanta();
+        });
+
+        // Descargar PDF
+        document.getElementById('download-pdf').addEventListener('click', () => {
+            const originalTheme = document.body.getAttribute('data-theme');
+            document.body.setAttribute('data-theme', 'light');
+
+            setTimeout(() => {
+                const opt = {
+                    margin: [0.3, 0.3, 0.3, 0.3],
+                    filename: 'CV_Jaider_Stiven_Molina_Trujillo.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                };
+                html2pdf().set(opt).from(document.body).save();
+
+                setTimeout(() => {
+                    document.body.setAttribute('data-theme', originalTheme);
+                    initVanta();
+                }, 500);
+            }, 300);
+        });
+
+        // Inicializar Vanta al cargar
+        window.addEventListener('load', initVanta);
+    </script>
+
+</body>
+</html>
